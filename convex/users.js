@@ -17,14 +17,15 @@ export const createNewUser = mutation({
       .collect();
 
     if (!user[0]?.email) {
-      // if user is not , insert a user
-      const result = await ctx.db.insert("users", {
+      const userData = {
         name: args.name,
         email: args.email,
         pictureURL: args?.pictureURL,
         credits: 10, // user can generate 10 video free
-      });
-      return result;
+      }
+      // if user is not , insert a user
+      const result = await ctx.db.insert("users",userData );
+      return userData;
     }
     return user[0];
   },

@@ -15,26 +15,23 @@ export const Provider = ({ children }) => {
 
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
       // it check when you refresh , you login or not
       console.log(user);
 
       const result = await createUser({
-        name:user?.displayName,
-        email:user?.email,
-        pictureURL:user?.photoURL
-      })
+        name: user?.displayName,
+        email: user?.email,
+        pictureURL: user?.photoURL,
+      });
 
       console.log(result);
-
-
+      setUser(result);
     });
     return () => unSubscribe();
   }, []);
 
   return (
     <div>
-      
       <AuthContext.Provider value={{ user }}>
         <NextThemesProvider
           attribute="class"

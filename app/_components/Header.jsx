@@ -21,13 +21,13 @@ export const Header = () => {
         </Authentication>
       ) : (
         <div className="flex items-center gap-3">
-          <Link href={"/dashborad"}>
+          <Link href={"/dashboard"}>
             {" "}
             <Button className="cursor-pointer">Dashboard</Button>
           </Link>
 
           <Image
-            src={user?.photoURL}
+            src={user?.pictureURL}
             alt="user Image"
             width={40}
             height={40}
