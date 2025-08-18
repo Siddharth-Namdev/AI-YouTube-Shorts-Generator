@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { onAuthStateChanged } from "firebase/auth";
-import { AuthContext } from "./AuthContext";
+import { AuthContext } from "./_context/AuthContext";
 import { auth } from "@/configs/firebaseConfig";
 
 export const Provider = ({ children }) => {
