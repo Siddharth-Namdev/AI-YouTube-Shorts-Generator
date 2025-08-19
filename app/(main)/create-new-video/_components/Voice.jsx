@@ -64,7 +64,7 @@ const Voice = ({ onHandleInputChange }) => {
                      dark:bg-slate-900 dark:border-white rounded-lg  
                      ${voice.name == selectedVoice && "border"}`}
               onClick={() => {
-                selectedVoice(voice.name);
+                setSelectedVoice(voice.name);
                 onHandleInputChange("voice", voice.value);
               }}
               key={index}

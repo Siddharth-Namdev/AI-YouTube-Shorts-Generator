@@ -1,17 +1,17 @@
 import Image from "next/image";
 import React, { useState } from "react";
 
-const options = [
+export const options = [
   {
     name: "Realistic",
     image: "/girl 1.jpg",
   },
   {
-    name: "Realistic",
+    name: "Girl 2",
     image: "/girl 2.jpg",
   },
   {
-    name: "Realistic",
+    name: "Boy ",
     image: "/boy 1.jpg",
   },
   {
@@ -19,11 +19,11 @@ const options = [
     image: "/cinematic1.jpg",
   },
   {
-    name: "Realistic",
+    name: "Realistic 2",
     image: "/realastics1.jpg",
   },
   {
-    name: "Realistic",
+    name: "Realistic 3",
     image: "/nature1.jpg",
   },
 ];
@@ -38,7 +38,7 @@ const VideoStyle = ({ onHandleInputChange }) => {
 
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
         {options?.map((option, index) => (
-          <div
+          <div key={index}
             className="relative"
             onClick={() => {
               setSelectedStyle(option.name);

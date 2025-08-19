@@ -57,7 +57,7 @@ const Captions = ({ onHandleInputChange }) => {
             key={index}
             onClick={() => {
               setSelectedCaptionStyle(option.name);
-              onHandleInputChange(option);
+              onHandleInputChange('caption',option);
             }}
             className={`p-2 bg-slate-900 hover:border
                  border-gray-400 cursor-pointer  rounded-lg 
