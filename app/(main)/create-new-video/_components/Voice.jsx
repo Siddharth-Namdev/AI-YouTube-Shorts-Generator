@@ -4,29 +4,52 @@ import React, { useState } from "react";
 const voiceOptions = [
   // this is come from Ai Guru Lab
   {
+    value: "am_adam",
+    name: "🇺🇸 Adam (Male)",
+  },
+  {
     value: "af_sarah",
-    name: "Sarah (Female)",
+    name: "🇺🇸 Sarah (Female)",
   },
   {
     value: "af_sky",
-    name: "Sky (Female)",
+    name: "🇬🇧 Sky (Female)",
   },
   {
-    value: "am_adam",
-    name: "Adam (Male)",
+    value: "in_ananya",
+    name: "🇮🇳 Ananya (Female)",
   },
   {
-    value: "hf_alpha",
-    name: "Alpha (Female)",
+    value: "in_raj",
+    name: "🇮🇳 Raj (Male)",
   },
   {
-    value: "af_beta",
-    name: "Beta (Female)",
+    value: "au_olivia",
+    name: "🇦🇺 Olivia (Female)",
   },
-  
+  {
+    value: "au_liam",
+    name: "🇦🇺 Liam (Male)",
+  },
+  {
+    value: "fr_claire",
+    name: "🇫🇷 Claire (Female)",
+  },
+  {
+    value: "fr_pierre",
+    name: "🇫🇷 Pierre (Male)",
+  },
+  {
+    value: "jp_yui",
+    name: "🇯🇵 Yui (Female)",
+  },
+  {
+    value: "jp_haruto",
+    name: "🇯🇵 Haruto (Male)",
+  },
 ];
 
-const Voice = ({onHandleInputChange}) => {
+const Voice = ({ onHandleInputChange }) => {
   const [selectedVoice, setSelectedVoice] = useState();
   return (
     <div className="mt-5">
@@ -40,9 +63,10 @@ const Voice = ({onHandleInputChange}) => {
               className={`cursor-pointer hover:border p-3
                      dark:bg-slate-900 dark:border-white rounded-lg  
                      ${voice.name == selectedVoice && "border"}`}
-              onClick={() => {selectedVoice(voice.name);
-                onHandleInputChange('voice',voice.value)}
-              }
+              onClick={() => {
+                selectedVoice(voice.name);
+                onHandleInputChange("voice", voice.value);
+              }}
               key={index}
             >
               {voice.name}
