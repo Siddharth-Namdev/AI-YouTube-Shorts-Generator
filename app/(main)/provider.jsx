@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import React, { useEffect } from "react";
 import AppSidebar from "./_components/AppSideBar";
@@ -8,24 +8,24 @@ import { useRouter } from "next/navigation";
 
 const DashboardProvider = ({ children }) => {
   const router = useRouter();
-  const {user} = useAuthContext();
-  useEffect(()=>{
+  const { user } = useAuthContext();
+  useEffect(() => {
     user && CheckedUserAuthenticated();
-  },[user])
-  
-const CheckedUserAuthenticated = ()=>{
-  if(!user){
-    router.replace('/');
-  }
-}
+  }, [user]);
 
+  const CheckedUserAuthenticated = () => {
+    if (!user) {
+      router.replace("/");
+    }
+  };
 
   return (
     <SidebarProvider>
       <AppSidebar />
       <div className="w-full">
-        <AppHeader/>
-        {children}</div>
+        <AppHeader />
+        <div className="p-10"> {children}</div>
+      </div>
     </SidebarProvider>
   );
 };

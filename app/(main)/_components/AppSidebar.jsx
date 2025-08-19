@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import {
   Sidebar,
@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import {
   Gem,
   HomeIcon,
-  
   LucideFileVideo,
   Search,
   WalletCardsIcon,
@@ -50,7 +49,7 @@ const MenuItems = [
 const AppSidebar = () => {
   // these all are come from sadecn
 
-  const {user} = useAuthContext();
+  const { user } = useAuthContext();
   const path = usePathname();
   return (
     <Sidebar>
@@ -71,12 +70,14 @@ const AppSidebar = () => {
           <SidebarGroupContent>
             {" "}
             <div className="mx-5 mt-10">
-              <Button className="w-full">+Create New Video</Button>
+              <Link href={"/create-new-video"}>
+                <Button className="w-full cursor-pointer">+Create New Video</Button>
+              </Link>
             </div>
             <SidebarMenu>
               {MenuItems.map((menu, index) => (
                 <SidebarMenuItem className="mt-3" key={menu.url || index}>
-                  <SidebarMenuButton isActive={path} className="p-5" >
+                  <SidebarMenuButton isActive={path} className="p-5">
                     <Link href={menu.url} className="flex items-center gap-4">
                       <menu.icon />
                       <span>{menu.title}</span>
@@ -91,8 +92,8 @@ const AppSidebar = () => {
       <SidebarFooter>
         <div className="p-5 border rounded-lg mb-6 bg-gray-800">
           <div className="flex items-center justify-between">
-            <Gem/>
-            <h2 className="text-gray-600" > {user?.credits} Credits Left</h2>
+            <Gem />
+            <h2 className="text-gray-600"> {user?.credits} Credits Left</h2>
           </div>
           <Button className="w-full mt-3">Buy More Credits</Button>
         </div>
