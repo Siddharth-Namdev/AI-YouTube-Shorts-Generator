@@ -4,3 +4,5 @@ hye
 
 
 AI Guru Lab - Image generation api && text to speech API
+
+caption style chatgpt se bnwaya
