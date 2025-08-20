@@ -16,7 +16,9 @@ const CreateNewVideo = () => {
   const [formData, setFormData] = useState({});
   const { user } = useAuthContext(); // user jo jo v select krega , wo isme save hoga
 
-  const CreateInitialVidoRecord = useMutation(api.videoData.CreateVideoData);
+  //const CreateInitialVidoRecord = useMutation(api.videoData.CreateVideoData);
+  const CreateInitialVideoRecord = useMutation(api.videoData.CreateVideoData);
+
 
   const [loading, setLoading] = useState();
 
@@ -42,7 +44,7 @@ const CreateNewVideo = () => {
     setLoading(true);
 
     // save video data first
-    const resp = await CreateInitialVidoRecord({
+    const resp = await CreateInitialVideoRecord({
       title: formData.title,
       topic: formData.topic,
       script: formData.script,
@@ -57,6 +59,7 @@ const CreateNewVideo = () => {
 
     const result = await axios.post("/api/generate-video-data", {
       ...formData,
+      recordId:resp,   // iD of record
     });
     console.log(result);
     setLoading(false);

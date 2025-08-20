@@ -18,6 +18,15 @@ export const Provider = ({ children }) => {
       // it check when you refresh , you login or not
       console.log(user);
 
+      if (!user?.displayName || !user?.email || !user?.photoURL) {
+        console.warn("⚠️ Missing required fields:", {
+          name: user?.displayName,
+          email: user?.email,
+          pictureURL: user?.photoURL,
+        });
+        return;
+      }
+
       const result = await createUser({
         name: user?.displayName,
         email: user?.email,

@@ -2,6 +2,8 @@ import axios from "axios";
 import { inngest } from "./client";
 import { createClient } from "@deepgram/sdk";
 import { GenerateImageScript } from "@/configs/AiModel";
+import { ConvexHttpClient } from "convex/browser";
+import { api } from "@/convex/_generated/api";
 
 const ImagePromptScript = `Generate Image prompt of {style} style with all details for each scene for 30 seconds vodeo:script:{script}
     - Just Give specifing image prompt depends on the story line
@@ -27,7 +29,9 @@ export const GenerateVideoData = inngest.createFunction(
   { id: "generate-video-data" },
   { event: "generate-video-data" },
   async ({ event, step }) => {
-    const { script, topic, caption, videoStyle, voice } = event?.data;
+    const { script, topic, caption, recordId, videoStyle, voice } = event?.data;
+
+    const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL);
 
     // Generate Audio File MP3 --> logic to generate audio form script
     const GenerateAudioFile = await step.run("GenerateAudioFile", async () => {
@@ -49,10 +53,11 @@ export const GenerateVideoData = inngest.createFunction(
       return result.data.audio;
     });
 
-
     // Generate Caption  --> this code is copy from deepgram , audio to text
     const GenerateCaptions = await step.run("generateCaptions", async () => {
+
       const deepgram = createClient(process.env.NEXT_PUBLIC_DEEPGRAM_API_KEY);
+
       const { result, error } = await deepgram.listen.prerecorded.transcribeUrl(
         {
           url: GenerateAudioFile,
@@ -60,11 +65,11 @@ export const GenerateVideoData = inngest.createFunction(
         // STEP 3: Configure Deepgram options for audio analysis
         {
           model: "nova-3",
+          smart_format: true,
         }
       );
       return result.results?.channels[0]?.alternatives[0]?.words;
     });
-
 
     // Generate Image Prompt from Script
     const GenerateImagePrompts = await step.run(
@@ -98,7 +103,7 @@ export const GenerateVideoData = inngest.createFunction(
             },
             {
               headers: {
-                "x-api-key": process.env.NEXT_PUBLIC_AIGURULAB_API_KEY, // Your API Key
+                "x-api-key": process.env.AIGURULAB_API_KEY, // Your API Key
                 "Content-Type": "application/json", // Content Type
               },
             }
@@ -110,9 +115,17 @@ export const GenerateVideoData = inngest.createFunction(
       return images;
     });
 
+    // Save all data to database
+    const UpdateDB = await step.run("UpdateDB", async () => {
+      const result = await convex.mutation(api.videoData.UpdateVideoRecord, {
+        recordId: recordId,
+        audioUrl: GenerateAudioFile,
+        captionJson: GenerateCaptions,
+        images: GenerateImages,
+      });
+      return result;
+    });
 
-    
-
-    return GenerateImages;
+    return 'Executed Successfully';
   }
 );
