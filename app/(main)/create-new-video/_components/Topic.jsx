@@ -25,7 +25,7 @@ const Suggestions = [
 const Topic = ({ onHandleInputChange }) => {
   const [selectedTopic, setSelectedTopic] = useState();
 
-  const [selectScriptIndex , setSelectedScriptIndex] = useState();
+  const [selectScriptIndex, setSelectedScriptIndex] = useState();
   const [script, setScript] = useState();
   const [loading, setLoading] = useState(false);
 
@@ -97,10 +97,18 @@ const Topic = ({ onHandleInputChange }) => {
             <h2> Select The Script</h2>
             <div className="grid grid-cols-2 gap-5 mt-1">
               {script?.map((item, index) => (
-                <div key={index} className={`p-3 border rounded-lg cursor-pointer
-                ${selectScriptIndex===index && 'border-white bg-secondary'}
+                <div
+                  key={index}
+                  className={`p-3 border rounded-lg cursor-pointer
+                ${selectScriptIndex === index && "border-white bg-secondary"}
                 `}
-                onClick={()=>setSelectedScriptIndex(index)}
+                  // onClick={()=>setSelectedScriptIndex(index)
+
+                  // }
+                  onClick={() => {
+                    setSelectedScriptIndex(index);
+                    onHandleInputChange("script", item.contents); // ✅ update formData
+                  }}
                 >
                   <h2 className="line-clamp-4 text-sm text-gray-400">
                     {item.contents}
@@ -111,20 +119,22 @@ const Topic = ({ onHandleInputChange }) => {
           </div>
         )}
       </div>
-     { !script && <Button
-        className="mt-3"
-        size="sm"
-        disabled={loading}
-        onClick={GenerateScript}
-      >
-        {" "}
-        {loading ? (
-          <Loader2Icon className="animate-spin" />
-        ) : (
-          <SparkleIcon />
-        )}{" "}
-        Generate Script{" "}
-      </Button>}
+      {!script && (
+        <Button
+          className="mt-3"
+          size="sm"
+          disabled={loading}
+          onClick={GenerateScript}
+        >
+          {" "}
+          {loading ? (
+            <Loader2Icon className="animate-spin" />
+          ) : (
+            <SparkleIcon />
+          )}{" "}
+          Generate Script{" "}
+        </Button>
+      )}
     </div>
   );
 };

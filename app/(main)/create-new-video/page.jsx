@@ -7,15 +7,32 @@ import Captions from "./_components/Captions";
 import { Button } from "@/components/ui/button";
 import { WandSparkles } from "lucide-react";
 import Preview from "./_components/Preview";
+import axios from "axios";
 
 const CreateNewVideo = () => {
-  const [formData, setFormData] = useState(); // user jo jo v select krega , wo isme save hoga
+  const [formData, setFormData] = useState({}); // user jo jo v select krega , wo isme save hoga
   const onHandleInputChange = (fieldName, fieldValue) => {
     setFormData((prev) => ({
       ...prev,
       [fieldName]: fieldValue,
     }));
     console.log(formData);
+  };
+  const GenerateVideo = async () => {
+    if (
+      !formData?.topic ||
+      !formData?.script ||
+      !formData?.videoStyle ||
+      !formData?.voice
+    ) {
+      console.log("ERROR", "Enter ALL fields");
+      return;
+    }
+
+    const result = await axios.post("/api/generate-video-data", {
+      ...formData,
+    });
+    console.log(result);
   };
   return (
     <div>
@@ -31,10 +48,13 @@ const CreateNewVideo = () => {
           {/* Captions */}
           <Captions onHandleInputChange={onHandleInputChange} />
 
-          <Button className="w-full mt-5"> <WandSparkles/> Generate Video</Button>
+          <Button className="w-full mt-5" onClick={GenerateVideo}>
+            {" "}
+            <WandSparkles /> Generate Video
+          </Button>
         </div>
         <div>
-          <Preview formData={formData}/>
+          <Preview formData={formData} />
         </div>
       </div>
     </div>
