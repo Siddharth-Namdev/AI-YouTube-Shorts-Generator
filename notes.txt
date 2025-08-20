@@ -6,3 +6,27 @@ hye
 AI Guru Lab - Image generation api && text to speech API
 
 caption style chatgpt se bnwaya
+
+
+we use AI guru lab for images generation  --. text to image and text to speech
+
+generate all contents vedio depends on user selection
+
+script -->  Generate Audio File Mp3   , from audio file generate caption
+ then generate image prompt from script --> then from image prompt generate images then save all Data to databese
+
+
+ -- we use inngest for long api call , because after 15 sec api call give error , so we use inngest - --. for deploy in cloud
+
+
+
+
+
+
+
+
+
+
+
+
+ 
