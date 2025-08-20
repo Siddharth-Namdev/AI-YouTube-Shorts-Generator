@@ -64,5 +64,23 @@ export const generateScript = model.startChat({
   ],
 });
 
+export const GenerateImageScript = model.startChat({
+  generationConfig,
+  history: [
+    {
+      role: "user",
+      parts: [
+        {
+          text: "Generate Image prompt of style with all details for each scene for 30 seconds",
+        },
+      ],
+    },
+    {
+      role: "model",
+      parts: [{ text: '```json\n {\n "imagePrompt":[\n {\n "}]    ' }],
+    },
+  ],
+});
+
 // const result = await chatSession.sendMessage("INSERT_INPUT_HERE")
 // console.log(result.response.text());
