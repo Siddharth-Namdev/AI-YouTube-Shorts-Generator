@@ -2,11 +2,28 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 // this is for create a table schema in convex - > like create a schema in mongoose
-export default defineSchema({  // create a table name user 
-    users:defineTable({
-        name:v.string(),
-        email:v.string(),
-        pictureURL:v.string(),
-        credits:v.number()
-    })
-})
+export default defineSchema({
+  // create a table name user
+  users: defineTable({
+    name: v.string(),
+    email: v.string(),
+    pictureURL: v.string(),
+    credits: v.number(),
+  }),
+
+  videoData: defineTable({
+    title: v.string(),
+    topic: v.string(),
+    script: v.string(),
+    videoStyle: v.string(),
+    caption: v.any(),
+    voice: v.string(),
+    images: v.optional (v.any()),
+    audioUrl: v.optional( v.string()),
+    captionJson: v.optional( v.string()),
+    uid: v.id("users"),
+    createdBy: v.string(),
+  }),
+
+  // to track of generating video data
+});

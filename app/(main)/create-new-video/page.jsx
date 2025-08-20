@@ -5,12 +5,21 @@ import VideoStyle from "./_components/VideoStyle";
 import Voice from "./_components/Voice";
 import Captions from "./_components/Captions";
 import { Button } from "@/components/ui/button";
-import { WandSparkles } from "lucide-react";
+import { Loader2Icon, WandSparkles } from "lucide-react";
 import Preview from "./_components/Preview";
 import axios from "axios";
+import { useMutation } from "convex/react";
+import { useAuthContext } from "@/app/provider";
+import { api } from "@/convex/_generated/api";
 
 const CreateNewVideo = () => {
-  const [formData, setFormData] = useState({}); // user jo jo v select krega , wo isme save hoga
+  const [formData, setFormData] = useState({});
+  const { user } = useAuthContext(); // user jo jo v select krega , wo isme save hoga
+
+  const CreateInitialVidoRecord = useMutation(api.videoData.CreateVideoData);
+
+  const [loading, setLoading] = useState();
+
   const onHandleInputChange = (fieldName, fieldValue) => {
     setFormData((prev) => ({
       ...prev,
@@ -18,6 +27,7 @@ const CreateNewVideo = () => {
     }));
     console.log(formData);
   };
+
   const GenerateVideo = async () => {
     if (
       !formData?.topic ||
@@ -29,10 +39,27 @@ const CreateNewVideo = () => {
       return;
     }
 
+    setLoading(true);
+
+    // save video data first
+    const resp = await CreateInitialVidoRecord({
+      title: formData.title,
+      topic: formData.topic,
+      script: formData.script,
+      videoStyle: formData.videoStyle,
+
+      caption: formData.caption,
+      voice: formData.voice,
+      uid: user?._id,
+      createdBy: user?.email,
+    });
+    console.log(resp);
+
     const result = await axios.post("/api/generate-video-data", {
       ...formData,
     });
     console.log(result);
+    setLoading(false);
   };
   return (
     <div>
@@ -48,9 +75,18 @@ const CreateNewVideo = () => {
           {/* Captions */}
           <Captions onHandleInputChange={onHandleInputChange} />
 
-          <Button className="w-full mt-5" onClick={GenerateVideo}>
+          <Button
+            className="w-full mt-5"
+            onClick={GenerateVideo}
+            disabled={loading}
+          >
             {" "}
-            <WandSparkles /> Generate Video
+            {loading ? (
+              <Loader2Icon className="animate-spin" />
+            ) : (
+              <WandSparkles />
+            )}
+            Generate Video
           </Button>
         </div>
         <div>

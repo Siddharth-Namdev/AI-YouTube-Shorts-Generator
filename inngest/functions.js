@@ -1,5 +1,6 @@
 import axios from "axios";
 import { inngest } from "./client";
+import { createClient } from "@deepgram/sdk";
 
 export const helloWorld = inngest.createFunction(
   { id: "hello-world" },
@@ -10,7 +11,7 @@ export const helloWorld = inngest.createFunction(
   }
 );
 
-const BASE_URL = "https://aigurulab.tech";  // from AIGRURLAB
+const BASE_URL = "https://aigurulab.tech"; // from AIGRURLAB
 export const GenerateVideoData = inngest.createFunction(
   { id: "generate-video-data" },
   { event: "generate-video-data" },
@@ -18,7 +19,8 @@ export const GenerateVideoData = inngest.createFunction(
     const { script, topic, caption, videoStyle, voice } = event?.data;
 
     // Generate Audio File MP3 --> logic to generate audio form script
-    const GenerateAudioFile = await step.run("GenerateAudioFile", async () => {  // ye code AIGURULAB se copy kiya h
+    const GenerateAudioFile = await step.run("GenerateAudioFile", async () => {
+      // ye code AIGURULAB se copy kiya h
       const result = await axios.post(
         BASE_URL + "/api/text-to-speech",
         {
@@ -36,13 +38,25 @@ export const GenerateVideoData = inngest.createFunction(
       return result.data.audio;
     });
 
-    // Generate Caption
+    // Generate Caption  --> this code is copy from deepgram , audio to text
+    const GenerateCaptions = await step.run("generateCaptions", async () => {
+      const deepgram = createClient(process.env.NEXT_PUBLIC_DEEPGRAM_API_KEY);
+      const { result, error } = await deepgram.listen.prerecorded.transcribeUrl(
+        {
+          url: GenerateAudioFile,
+        },
+        // STEP 3: Configure Deepgram options for audio analysis
+        {
+          model: "nova-3",
+        }
+      );
+      return result.results?.channels[0]?.alternatives[0]?.words;
+    });
 
     // Generate Image Prompt from Script
 
     //Generate Images Using AI
 
-
-    return GenerateAudioFile
+    return GenerateAudioFile;
   }
 );
