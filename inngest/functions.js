@@ -1,14 +1,14 @@
-import axios from "axios";
 import { inngest } from "./client";
 import { createClient } from "@deepgram/sdk";
 import { GenerateImageScript } from "@/configs/AiModel";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "@/convex/_generated/api";
+import axios from "axios";
 
-const ImagePromptScript = `Generate Image prompt of {style} style with all details for each scene for 30 seconds vodeo:script:{script}
+const ImagePromptScript = `Generate Image prompt of {style} style with all details for each scene for 20 seconds vodeo:script:{script}
     - Just Give specifing image prompt depends on the story line
     - do not give camera angle image prompt
-    - Follow the Following schema and return JSON data (Max 6-7 Images)
+    - Follow the Following schema and return JSON data (Max 3-4 Images)
     - [
     {
     imagePrompt:'',
@@ -29,34 +29,45 @@ export const GenerateVideoData = inngest.createFunction(
   { id: "generate-video-data" },
   { event: "generate-video-data" },
   async ({ event, step }) => {
-    const { script, topic, caption, recordId, videoStyle, voice } = event?.data;
+    const { script, topic, title, caption, recordId,credits, videoStyle, voice } =
+      event?.data;
 
     const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL);
 
     // Generate Audio File MP3 --> logic to generate audio form script
     const GenerateAudioFile = await step.run("GenerateAudioFile", async () => {
       // ye code AIGURULAB se copy kiya h
-      const result = await axios.post(
-        BASE_URL + "/api/text-to-speech",
-        {
-          input: script,
-          voice: voice,
-        },
-        {
-          headers: {
-            "x-api-key": process.env.NEXT_PUBLIC_AIGURULAB_API_KEY, // Your API Key
-            "Content-Type": "application/json", // Content Type
+      try {
+        const result = await axios.post(
+          BASE_URL + "/api/text-to-speech",
+          {
+            input: script,
+            voice: voice,
           },
-        }
-      );
-      console.log(result.data.audio); //Output Result: Audio Mp3 Url
-      return result.data.audio;
+          {
+            headers: {
+              "x-api-key": process.env.AIGURULAB_API_KEY, // Your API Key
+              "Content-Type": "application/json", // Content Type
+            },
+          }
+        );
+        console.log("Successfully generated audio:", result.data.audio); //Output Result: Audio Mp3 Url
+        return result.data.audio;
+      } catch (error) {
+        console.error("The Aigurulab API call failed!");
+
+        // THIS IS THE MOST IMPORTANT PART:
+        // It will print the detailed error message from the server that crashed.
+        console.error("Detailed error from Aigurulab:", error.response?.data);
+
+        // Re-throw the error so Inngest knows the step failed
+        throw error;
+      }
     });
 
     // Generate Caption  --> this code is copy from deepgram , audio to text
     const GenerateCaptions = await step.run("generateCaptions", async () => {
-
-      const deepgram = createClient(process.env.NEXT_PUBLIC_DEEPGRAM_API_KEY);
+      const deepgram = createClient(process.env.DEEPGRAM_API_KEY);
 
       const { result, error } = await deepgram.listen.prerecorded.transcribeUrl(
         {
@@ -115,7 +126,7 @@ export const GenerateVideoData = inngest.createFunction(
       return images;
     });
 
-    // Save all data to database
+    //Save all data to database
     const UpdateDB = await step.run("UpdateDB", async () => {
       const result = await convex.mutation(api.videoData.UpdateVideoRecord, {
         recordId: recordId,
@@ -126,6 +137,6 @@ export const GenerateVideoData = inngest.createFunction(
       return result;
     });
 
-    return 'Executed Successfully';
+    return "Executed Successfully";
   }
 );

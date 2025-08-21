@@ -19,7 +19,6 @@ const CreateNewVideo = () => {
   //const CreateInitialVidoRecord = useMutation(api.videoData.CreateVideoData);
   const CreateInitialVideoRecord = useMutation(api.videoData.CreateVideoData);
 
-
   const [loading, setLoading] = useState();
 
   const onHandleInputChange = (fieldName, fieldValue) => {
@@ -31,11 +30,17 @@ const CreateNewVideo = () => {
   };
 
   const GenerateVideo = async () => {
+    if (user?.credits <= 0) {
+      toast("Please add more credits!");
+      return;
+    }
+
     if (
       !formData?.topic ||
       !formData?.script ||
       !formData?.videoStyle ||
-      !formData?.voice
+      !formData?.voice ||
+      !formData?.caption
     ) {
       console.log("ERROR", "Enter ALL fields");
       return;
@@ -53,13 +58,14 @@ const CreateNewVideo = () => {
       caption: formData.caption,
       voice: formData.voice,
       uid: user?._id,
-      createdBy: user?.email,
+      createdBy: user?.email || "Guest",
+      credits: user?.credits,
     });
     console.log(resp);
 
     const result = await axios.post("/api/generate-video-data", {
       ...formData,
-      recordId:resp,   // iD of record
+      recordId: resp, // iD of record
     });
     console.log(result);
     setLoading(false);

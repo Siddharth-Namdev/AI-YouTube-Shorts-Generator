@@ -4,6 +4,10 @@ import React, { useState } from "react";
 const voiceOptions = [
   // this is come from Ai Guru Lab
   {
+    value: "am_michael",
+    name: "default (Male)",
+  },
+  {
     value: "am_adam",
     name: "🇺🇸 Adam (Male)",
   },
