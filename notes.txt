@@ -25,6 +25,11 @@ script -->  Generate Audio File Mp3   , from audio file generate caption
 we use Deepgram for convert autio to captions 
 
 
+remotion is used to generate video (it is react based library)
+
+ - npx remotion studio remotion/index.js  // use this command to run remotion locally
+
+
 
 
 
