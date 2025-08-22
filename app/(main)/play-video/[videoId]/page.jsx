@@ -32,13 +32,13 @@ const PlayVideo = () => {
   return (
     <div>
         <div>
-            {/* Remotion Player */} 
+            {/* Remotion Player --> already created video with all images , audio and caption */} 
             
             <RemotionPlayer  videoData={videoData} />
         </div>
         <div>
-            {/* Video Information */}
-            <VideoInfo/>
+            {/* Video Information  ---> video title and script of video */}
+            <VideoInfo  videoData={videoData} />
         </div>
     </div>
   )
